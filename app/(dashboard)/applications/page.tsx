@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/features/StatusBadge";
 import { Card } from "@/components/ui/Card";
 import { ApplicationFilters } from "@/components/features/ApplicationFilters";
+import { ExportButton } from "@/components/features/ExportButton";
 import { formatDate, needsFollowUp } from "@/lib/utils";
 import { STATUS_CONFIG } from "@/lib/constants";
 
@@ -45,14 +46,17 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
             {total} lamaran{hasFilters ? " (difilter)" : ""}
           </p>
         </div>
-        <Link href="/applications/new">
-          <Button size="sm" className="hidden sm:flex">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Tambah
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <ExportButton />
+          <Link href="/applications/new">
+            <Button size="sm" className="hidden sm:flex">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Tambah
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

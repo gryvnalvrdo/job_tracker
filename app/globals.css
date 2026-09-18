@@ -35,6 +35,23 @@
   --radius-2xl: 1.25rem;
 }
 
+/* ── Light mode overrides ──────────────────────────────── */
+[data-theme="light"] {
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+  --color-primary-glow: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] body {
+  color-scheme: light;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -48,6 +65,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   body {
@@ -78,6 +96,10 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--color-border);
+  }
+
+  [data-theme="light"] .glass {
+    background: rgba(255, 255, 255, 0.85);
   }
 
   .gradient-primary {

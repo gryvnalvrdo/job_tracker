@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useState } from "react";
+
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -35,7 +37,8 @@ export function Navbar({ userName }: NavbarProps) {
       {/* Desktop top bar */}
       <header className="hidden lg:flex h-16 items-center justify-between px-6 border-b border-[#2e3348] bg-[#0f1117]/80 backdrop-blur-sm sticky top-0 z-30">
         <h1 className="text-base font-semibold text-[#e2e8f0]">{currentTitle}</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link href="/applications/new">
             <Button size="sm">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
