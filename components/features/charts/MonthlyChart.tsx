@@ -50,7 +50,7 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
           {data.map((entry, idx) => (
             <Cell
               key={idx}
-              fill={entry.count === max ? "#6366f1" : "#6366f1"}
+              fill={entry.count === max ? "#6366f1" : "#a5b4fc"}
               fillOpacity={entry.count === max ? 1 : 0.4}
             />
           ))}

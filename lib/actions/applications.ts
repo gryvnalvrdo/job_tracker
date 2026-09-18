@@ -219,6 +219,10 @@ export async function getApplicationById(id: string) {
 export async function getDashboardStats() {
   const userId = await getAuthUserId();
 
+  // Start of 6 months ago (beginning of that month)
+  const now = new Date();
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
   const [total, byStatus, recentApplications] = await Promise.all([
     prisma.application.count({ where: { userId } }),
     prisma.application.groupBy({
@@ -226,8 +230,12 @@ export async function getDashboardStats() {
       where: { userId },
       _count: { status: true },
     }),
+    // Only fetch last 6 months — avoids loading all records into memory
     prisma.application.findMany({
-      where: { userId },
+      where: {
+        userId,
+        appliedDate: { gte: sixMonthsAgo },
+      },
       orderBy: { appliedDate: "asc" },
       select: { appliedDate: true, status: true },
     }),
@@ -241,7 +249,6 @@ export async function getDashboardStats() {
   const responseRate = total > 0 ? Math.round((advanced / total) * 100) : 0;
 
   // Monthly chart — last 6 months
-  const now = new Date();
   const monthlyData: { month: string; count: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);

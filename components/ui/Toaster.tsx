@@ -37,9 +37,12 @@ export function Toaster() {
   };
 
   // Expose globally for server action results
+  // Dependency array is intentionally empty: we only need to register the function once on mount.
+  // The `toast` closure captures `setToasts` which is stable across renders.
   useEffect(() => {
     (window as unknown as { __toast: typeof toast }).__toast = toast;
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const icons = {
     success: (
@@ -72,31 +75,30 @@ export function Toaster() {
   };
 
   return (
-    <ToastContext.Provider value={{ toast }}>
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
-        {toasts.map((t) => (
-          <div
-            key={t.id}
-            className={cn(
-              "pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border animate-in",
-              "shadow-xl backdrop-blur-sm max-w-sm",
-              colors[t.type]
-            )}
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+      {toasts.map((t) => (
+        <div
+          key={t.id}
+          className={cn(
+            "pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border animate-in",
+            "shadow-xl backdrop-blur-sm max-w-sm",
+            colors[t.type]
+          )}
+        >
+          <span className="flex-shrink-0 mt-0.5">{icons[t.type]}</span>
+          <p className="text-sm flex-1">{t.message}</p>
+          <button
+            onClick={() => removeToast(t.id)}
+            className="flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            aria-label="Tutup notifikasi"
           >
-            <span className="flex-shrink-0 mt-0.5">{icons[t.type]}</span>
-            <p className="text-sm flex-1">{t.message}</p>
-            <button
-              onClick={() => removeToast(t.id)}
-              className="flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        ))}
-      </div>
-    </ToastContext.Provider>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
 

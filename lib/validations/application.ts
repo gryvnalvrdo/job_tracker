@@ -1,22 +1,36 @@
 import { z } from "zod";
 
-export const applicationSchema = z.object({
-  companyName: z.string().min(1, "Nama perusahaan wajib diisi").max(100),
-  position: z.string().min(1, "Posisi wajib diisi").max(100),
-  jobUrl: z.string().url("URL tidak valid").optional().or(z.literal("")),
-  appliedDate: z.string().min(1, "Tanggal apply wajib diisi"),
-  salaryMin: z
-    .number({ invalid_type_error: "Harus berupa angka" })
-    .positive("Harus positif")
-    .optional()
-    .nullable(),
-  salaryMax: z
-    .number({ invalid_type_error: "Harus berupa angka" })
-    .positive("Harus positif")
-    .optional()
-    .nullable(),
-  notes: z.string().max(2000).optional().or(z.literal("")),
-});
+export const applicationSchema = z
+  .object({
+    companyName: z.string().min(1, "Nama perusahaan wajib diisi").max(100),
+    position: z.string().min(1, "Posisi wajib diisi").max(100),
+    jobUrl: z.string().url("URL tidak valid").optional().or(z.literal("")),
+    appliedDate: z.string().min(1, "Tanggal apply wajib diisi"),
+    salaryMin: z
+      .number({ invalid_type_error: "Harus berupa angka" })
+      .positive("Harus positif")
+      .optional()
+      .nullable(),
+    salaryMax: z
+      .number({ invalid_type_error: "Harus berupa angka" })
+      .positive("Harus positif")
+      .optional()
+      .nullable(),
+    notes: z.string().max(2000).optional().or(z.literal("")),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.salaryMin != null &&
+      data.salaryMax != null &&
+      data.salaryMax < data.salaryMin
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Gaji maksimum tidak boleh lebih kecil dari gaji minimum",
+        path: ["salaryMax"],
+      });
+    }
+  });
 
 export const updateStatusSchema = z.object({
   applicationId: z.string().cuid(),
