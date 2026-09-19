@@ -267,3 +267,28 @@ export async function getDashboardStats() {
 
   return { total, statusData, monthlyData, responseRate };
 }
+
+// ── Bulk Delete ─────────────────────────────────────────────────────────────
+export async function deleteApplications(ids: string[]): Promise<ActionResult> {
+  const userId = await getAuthUserId();
+  
+  if (!ids || ids.length === 0) {
+    return { success: false, error: "No applications selected" };
+  }
+
+  try {
+    await prisma.application.deleteMany({
+      where: {
+        id: { in: ids },
+        userId, // Ensure the user owns the applications
+      },
+    });
+
+    revalidatePath("/applications");
+    revalidatePath("/dashboard");
+    return { success: true, data: undefined };
+  } catch (error) {
+    console.error("Bulk delete error:", error);
+    return { success: false, error: "Gagal menghapus lamaran" };
+  }
+}

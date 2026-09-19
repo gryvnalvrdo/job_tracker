@@ -35,44 +35,75 @@ export async function POST(req: Request) {
         }
     }
 
-    // 3.5 Check for Duplicates
-    const existingJob = await prisma.application.findFirst({
-      where: {
-        userId: user.id,
-        OR: [
-          { jobUrl: jobUrl ? jobUrl : undefined },
-          {
-            AND: [
-              { companyName: { equals: companyName, mode: "insensitive" } },
-              { position: { equals: position, mode: "insensitive" } }
-            ]
-          }
-        ]
-      }
-    });
+    // 3.5 Check for Duplicates in BOTH Application and ProcessedJob
+    const duplicateCondition = {
+      OR: [
+        { jobUrl: jobUrl ? jobUrl : undefined },
+        {
+          AND: [
+            { companyName: { equals: companyName, mode: "insensitive" as const } },
+            { position: { equals: position, mode: "insensitive" as const } }
+          ]
+        }
+      ]
+    };
 
-    if (existingJob) {
+    const [existingApp, existingProcessed] = await Promise.all([
+      prisma.application.findFirst({
+        where: {
+          userId: user.id,
+          ...duplicateCondition
+        }
+      }),
+      prisma.processedJob.findFirst({
+        where: duplicateCondition
+      })
+    ]);
+
+    if (existingApp || existingProcessed) {
+      // If it exists in Application but NOT in ProcessedJob (old data), let's backfill it so it stays there if deleted
+      if (existingApp && !existingProcessed) {
+        await prisma.processedJob.create({
+          data: {
+            companyName: existingApp.companyName,
+            position: existingApp.position,
+            jobUrl: existingApp.jobUrl,
+            source: source || null,
+          }
+        }).catch(() => {}); // ignore duplicate key errors if any
+      }
+
       // Return 200 OK so n8n doesn't error, but include a message that it was skipped
       return NextResponse.json({ success: true, skipped: true, message: "Duplicate job detected" }, { status: 200 });
     }
 
-    // 4. Create Application
-    const application = await prisma.application.create({
-      data: {
-        userId: user.id,
-        companyName,
-        position,
-        jobUrl,
-        notes: source ? `Ditambahkan dari: ${source}` : "Ditambahkan dari n8n otomatis",
-        status: "SAVED",
-        appliedDate: new Date(),
-        statusHistory: {
-          create: [
-            { status: "SAVED" }
-          ]
+    // 4. Create Application and ProcessedJob history
+    const [application] = await prisma.$transaction([
+      prisma.application.create({
+        data: {
+          userId: user.id,
+          companyName,
+          position,
+          jobUrl,
+          notes: source ? `Ditambahkan dari: ${source}` : "Ditambahkan dari n8n otomatis",
+          status: "SAVED",
+          appliedDate: new Date(),
+          statusHistory: {
+            create: [
+              { status: "SAVED" }
+            ]
+          }
+        },
+      }),
+      prisma.processedJob.create({
+        data: {
+          companyName,
+          position,
+          jobUrl,
+          source: source || null,
         }
-      },
-    });
+      })
+    ]);
 
     return NextResponse.json({ success: true, application }, { status: 201 });
   } catch (error) {

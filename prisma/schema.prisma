@@ -53,3 +53,15 @@ enum ApplicationStatus {
   OFFER
   REJECTED
 }
+
+model ProcessedJob {
+  id          String   @id @default(cuid())
+  jobUrl      String?
+  companyName String
+  position    String
+  source      String?
+  processedAt DateTime @default(now())
+
+  @@index([companyName, position])
+  @@index([jobUrl])
+}

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/features/StatusBadge";
 import { Card } from "@/components/ui/Card";
 import { ApplicationFilters } from "@/components/features/ApplicationFilters";
+import { ApplicationList } from "@/components/features/ApplicationList";
 import { ExportButton } from "@/components/features/ExportButton";
 import { formatDate, needsFollowUp } from "@/lib/utils";
 import { STATUS_CONFIG } from "@/lib/constants";
@@ -68,45 +69,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
       {applications.length === 0 ? (
         <EmptyState hasFilters={hasFilters} />
       ) : (
-        <div className="space-y-3">
-          {applications.map((app) => (
-            <Link key={app.id} href={`/applications/${app.id}`} className="block group">
-              <Card hover className="transition-all">
-                <div className="flex items-center gap-4">
-                  {/* Avatar */}
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6366f1]/20 to-[#8b5cf6]/20 border border-[#6366f1]/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-base font-bold text-[#818cf8]">
-                      {app.companyName[0].toUpperCase()}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-[#e2e8f0] group-hover:text-white transition-colors truncate">
-                        {app.companyName}
-                      </span>
-                      <StatusBadge status={app.status} size="sm" />
-                      {needsFollowUp(app.updatedAt) && app.status !== "OFFER" && app.status !== "REJECTED" && (
-                        <span className="text-xs text-[#fbbf24]">• Perlu follow-up</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-[#8892a4] truncate">{app.position}</p>
-                  </div>
-
-                  {/* Date */}
-                  <div className="text-right flex-shrink-0 hidden sm:block">
-                    <p className="text-xs text-[#8892a4]">{formatDate(app.appliedDate)}</p>
-                  </div>
-
-                  <svg className="w-4 h-4 text-[#4a5568] group-hover:text-[#8892a4] transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <ApplicationList applications={applications} />
       )}
 
       {/* Pagination */}
