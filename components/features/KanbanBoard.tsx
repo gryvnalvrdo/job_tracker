@@ -46,7 +46,7 @@ export function KanbanBoard({ applications }: KanbanBoardProps) {
                       <p className="text-xs text-text-muted truncate mb-2">{app.position}</p>
                       
                       <div className="flex items-center justify-between text-[10px] text-text-muted mt-3 pt-2 border-t border-border/50">
-                        <span className="truncate max-w-[120px]">{app.location || "Remote"}</span>
+                        <span className="truncate max-w-[120px]">Remote</span>
                         <span>{formatDate(app.appliedDate)}</span>
                       </div>
                     </div>
