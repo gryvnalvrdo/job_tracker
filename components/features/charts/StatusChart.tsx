@@ -9,6 +9,7 @@ interface StatusChartProps {
 }
 
 const STATUS_COLORS: Record<ApplicationStatus, string> = {
+  SAVED: "#0ea5e9",
   APPLIED: "#6366f1",
   SCREENING: "#8b5cf6",
   INTERVIEW: "#f59e0b",
