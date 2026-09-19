@@ -4,6 +4,13 @@ export const STATUS_CONFIG: Record<
   ApplicationStatus,
   { label: string; color: string; bgColor: string; borderColor: string; dotColor: string }
 > = {
+  SAVED: {
+    label: "Tersimpan",
+    color: "text-[#38bdf8]",
+    bgColor: "bg-[#0284c7]/10",
+    borderColor: "border-[#0284c7]/30",
+    dotColor: "bg-[#0ea5e9]",
+  },
   APPLIED: {
     label: "Applied",
     color: "text-[#818cf8]",
@@ -42,6 +49,7 @@ export const STATUS_CONFIG: Record<
 };
 
 export const STATUS_FLOW: ApplicationStatus[] = [
+  "SAVED",
   "APPLIED",
   "SCREENING",
   "INTERVIEW",

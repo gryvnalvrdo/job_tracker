@@ -42,9 +42,14 @@ export async function POST(req: Request) {
         companyName,
         position,
         jobUrl,
-        notes: source ? `Source: ${source}` : undefined,
-        status: "APPLIED",
+        notes: source ? `Ditambahkan dari: ${source}` : "Ditambahkan dari n8n otomatis",
+        status: "SAVED",
         appliedDate: new Date(),
+        statusHistory: {
+          create: [
+            { status: "SAVED" }
+          ]
+        }
       },
     });
 
