@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ApplicationStatus } from "@/generated/prisma/client";
+import { ApplicationStatus, Application } from "@/generated/prisma/client";
 import { formatDate } from "@/lib/utils";
-import { Application } from "./ApplicationList";
 
 interface KanbanBoardProps {
   applications: Application[];
