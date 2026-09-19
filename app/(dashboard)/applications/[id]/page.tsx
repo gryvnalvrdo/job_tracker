@@ -47,7 +47,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
         <div className="flex gap-2 flex-wrap">
           {/* CoverCraft integration — part of Job Hunting Suite */}
           <a
-            href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL || "https://portofolio-seven-lac-56.vercel.app"}/covercraft?job=${encodeURIComponent(application.position)}&company=${encodeURIComponent(application.companyName)}&url=${encodeURIComponent(application.jobUrl || "")}`}
+            href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL || "https://portofolio-seven-lac-56.vercel.app"}/covercraft?job=${encodeURIComponent(application.position)}&company=${encodeURIComponent(application.companyName)}&url=${encodeURIComponent(application.jobUrl || "")}&id=${application.id}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -146,6 +146,18 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
               <p className="text-sm text-[#c4cad8] whitespace-pre-wrap leading-relaxed">
                 {application.notes}
               </p>
+            </Card>
+          )}
+
+          {/* Cover Letter */}
+          {application.coverLetter && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Saved Cover Letter</CardTitle>
+              </CardHeader>
+              <div className="text-sm text-[#c4cad8] whitespace-pre-wrap leading-relaxed bg-[#1a1b26] p-4 rounded-lg font-serif">
+                {application.coverLetter}
+              </div>
             </Card>
           )}
 

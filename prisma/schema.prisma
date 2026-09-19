@@ -28,6 +28,7 @@ model Application {
   jobUrl        String?
   salaryMin     Int?
   salaryMax     Int?
+  coverLetter   String?           @db.Text
   status        ApplicationStatus @default(APPLIED)
   appliedDate   DateTime
   notes         String?
