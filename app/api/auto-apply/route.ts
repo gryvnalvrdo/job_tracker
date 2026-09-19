@@ -13,10 +13,17 @@ export async function POST(req: Request) {
 
     // 2. Parse Body
     const body = await req.json();
-    const { companyName, position, jobUrl, source } = body;
+    let { companyName, position, jobUrl, source } = body;
 
     if (!companyName || !position) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // FIX for n8n sending "Company" and combined title from WWR
+    if (companyName === "Company" && position.includes(":")) {
+      const parts = position.split(":");
+      companyName = parts[0].trim();
+      position = parts.slice(1).join(":").trim();
     }
 
     // 3. Find Demo User
