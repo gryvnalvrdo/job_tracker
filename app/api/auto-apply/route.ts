@@ -35,6 +35,27 @@ export async function POST(req: Request) {
         }
     }
 
+    // 3.5 Check for Duplicates
+    const existingJob = await prisma.application.findFirst({
+      where: {
+        userId: user.id,
+        OR: [
+          { jobUrl: jobUrl ? jobUrl : undefined },
+          {
+            AND: [
+              { companyName: { equals: companyName, mode: "insensitive" } },
+              { position: { equals: position, mode: "insensitive" } }
+            ]
+          }
+        ]
+      }
+    });
+
+    if (existingJob) {
+      // Return 200 OK so n8n doesn't error, but include a message that it was skipped
+      return NextResponse.json({ success: true, skipped: true, message: "Duplicate job detected" }, { status: 200 });
+    }
+
     // 4. Create Application
     const application = await prisma.application.create({
       data: {
