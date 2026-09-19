@@ -54,6 +54,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
         <div className="flex items-center gap-2">
           <ExportButton />
           <Link href="/applications/new">
+            <Button>
               Tambah
             </Button>
           </Link>

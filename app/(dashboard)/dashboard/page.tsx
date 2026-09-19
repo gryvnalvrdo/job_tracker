@@ -184,11 +184,28 @@ export default async function DashboardPage() {
             {dict.recent.viewAll}
           </Link>
         </CardHeader>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="p-4 flex-1">
+          {recentApps.length === 0 ? (
+            <p className="text-sm text-text-muted text-center py-4">{dict.recent.empty}</p>
+          ) : (
+            <div className="space-y-3">
+              {recentApps.map((app) => (
+                <Link key={app.id} href={`/applications/${app.id}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-border">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-text truncate">{app.companyName}</p>
+                      <p className="text-xs text-text-muted truncate">{app.position}</p>
+                    </div>
+                    <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+                      <p className="text-[10px] text-text-muted">{formatDate(app.appliedDate)}</p>
+                      <StatusBadge status={app.status} size="sm" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </Card>
     </div>
   );
