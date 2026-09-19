@@ -26,6 +26,10 @@ export const dictionary = {
         monthlyTitle: "Monthly Activity",
         monthlySub: "Last 6 months"
       },
+      followUp: {
+        title: "Needs Follow-up",
+        viewAll: "View All"
+      },
       recent: {
         title: "Recent Applications",
         viewAll: "View All",
@@ -93,6 +97,10 @@ export const dictionary = {
         funnelSub: "Tingkat konversi",
         monthlyTitle: "Aktivitas Bulanan",
         monthlySub: "6 bulan terakhir"
+      },
+      followUp: {
+        title: "Perlu Follow-up",
+        viewAll: "Lihat Semua"
       },
       recent: {
         title: "Lamaran Terkini",
