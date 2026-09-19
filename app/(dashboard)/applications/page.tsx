@@ -10,8 +10,8 @@ import { StatusBadge } from "@/components/features/StatusBadge";
 import { Card } from "@/components/ui/Card";
 import { ApplicationFilters } from "@/components/features/ApplicationFilters";
 import { ApplicationList } from "@/components/features/ApplicationList";
+import { KanbanBoard } from "@/components/features/KanbanBoard";
 import { ExportButton } from "@/components/features/ExportButton";
-import { formatDate, needsFollowUp } from "@/lib/utils";
 import { STATUS_CONFIG } from "@/lib/constants";
 
 export const metadata: Metadata = { title: "Lamaran Kerja" };
@@ -21,6 +21,7 @@ interface ApplicationsPageProps {
     status?: string;
     search?: string;
     page?: string;
+    view?: string;
   }>;
 }
 
@@ -34,6 +35,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
   const status = sp.status as ApplicationStatus | undefined;
   const search = sp.search;
   const page = sp.page ? parseInt(sp.page) : 1;
+  const view = sp.view || "list";
 
   const { applications, total, totalPages } = await getApplications({
     status,
@@ -66,9 +68,23 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
         <ApplicationFilters currentStatus={status} currentSearch={search} />
       </Suspense>
 
-      {/* List */}
+      {/* View Toggle */}
+      <div className="flex justify-end mb-4">
+        <div className="bg-surface-2 p-1 rounded-lg inline-flex">
+          <Link href={`/applications?view=list${status ? `&status=${status}` : ""}${search ? `&search=${search}` : ""}`} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${view === "list" ? "bg-surface shadow-sm text-text font-medium" : "text-text-muted hover:text-text"}`}>
+            List
+          </Link>
+          <Link href={`/applications?view=board${status ? `&status=${status}` : ""}${search ? `&search=${search}` : ""}`} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${view === "board" ? "bg-surface shadow-sm text-text font-medium" : "text-text-muted hover:text-text"}`}>
+            Board
+          </Link>
+        </div>
+      </div>
+
+      {/* List / Board */}
       {applications.length === 0 ? (
         <EmptyState hasFilters={hasFilters} />
+      ) : view === "board" ? (
+        <KanbanBoard applications={applications} />
       ) : (
         <ApplicationList applications={applications} />
       )}
