@@ -10,15 +10,21 @@ import { loginSchema, LoginInput } from "@/lib/validations/auth";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
+const DEMO_EMAIL = "demo@jobtrail.app";
+const DEMO_PASSWORD = "Demo1234";
+
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({ resolver: zodResolver(loginSchema) });
 
@@ -38,8 +44,51 @@ function LoginForm() {
     }
   }
 
+  async function handleDemoLogin() {
+    setIsDemoLoading(true);
+    setServerError(null);
+    setValue("email", DEMO_EMAIL);
+    setValue("password", DEMO_PASSWORD);
+    const result = await signIn("credentials", {
+      email: DEMO_EMAIL,
+      password: DEMO_PASSWORD,
+      redirect: false,
+    });
+    if (result?.error) {
+      setServerError("Demo account not available. Please register a free account.");
+      setIsDemoLoading(false);
+    } else {
+      router.push("/dashboard");
+      router.refresh();
+    }
+  }
+
   return (
     <div className="glass rounded-2xl p-6 space-y-4">
+      {/* Demo banner */}
+      <button
+        type="button"
+        onClick={handleDemoLogin}
+        disabled={isDemoLoading || isSubmitting}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#10b981]/30 bg-[#10b981]/10 text-[#6ee7b7] text-sm font-semibold hover:bg-[#10b981]/20 hover:border-[#10b981]/50 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {isDemoLoading ? (
+          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+        ) : (
+          <span>⚡</span>
+        )}
+        {isDemoLoading ? "Logging in..." : "Try Demo — No sign-up needed"}
+      </button>
+
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-white/10"/>
+        <span className="text-xs text-[#8892a4]">or sign in</span>
+        <div className="flex-1 h-px bg-white/10"/>
+      </div>
+
       {serverError && (
         <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/30 text-[#f87171] text-sm">
           <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -115,6 +164,22 @@ export default function LoginPage() {
             Daftar sekarang
           </Link>
         </p>
+
+        {/* Portfolio attribution */}
+        <div className="mt-6 pt-4 border-t border-white/5 text-center">
+          <p className="text-xs text-[#8892a4]/60">
+            Part of the{" "}
+            <a
+              href="https://gryven.vercel.app"
+              target="_blank"
+              rel="noopener"
+              className="text-[#818cf8]/80 hover:text-[#a78bfa] transition-colors"
+            >
+              Job Hunting Suite
+            </a>
+            {" "}by Gryven Alverdo Gunawan
+          </p>
+        </div>
       </div>
     </div>
   );

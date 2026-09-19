@@ -44,7 +44,17 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             </Button>
           </Link>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          {/* CoverCraft integration — part of Job Hunting Suite */}
+          <a
+            href={`https://covercraft-gryven.vercel.app?job=${encodeURIComponent(application.position)}&company=${encodeURIComponent(application.companyName)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="secondary" size="sm" className="border-[#7c3aed]/40 text-[#a78bfa] hover:bg-[#7c3aed]/10">
+              ✨ Generate Cover Letter
+            </Button>
+          </a>
           <Link href={`/applications/${id}/edit`}>
             <Button variant="secondary" size="sm">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
