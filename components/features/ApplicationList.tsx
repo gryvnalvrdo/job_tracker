@@ -11,7 +11,7 @@ import { deleteApplications } from "@/lib/actions/applications";
 
 import { getApplications } from "@/lib/actions/applications";
 
-type ApplicationData = NonNullable<Awaited<ReturnType<typeof getApplications>>>["applications"][0];
+export type ApplicationData = NonNullable<Awaited<ReturnType<typeof getApplications>>>["applications"][0];
 
 interface ApplicationListProps {
   applications: ApplicationData[];

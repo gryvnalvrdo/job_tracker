@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ApplicationStatus, Application } from "@/generated/prisma/client";
+import { ApplicationStatus } from "@/generated/prisma/client";
 import { formatDate } from "@/lib/utils";
+import { ApplicationData } from "./ApplicationList";
 
 interface KanbanBoardProps {
-  applications: Application[];
+  applications: ApplicationData[];
 }
 
 const KANBAN_COLUMNS: { id: ApplicationStatus; label: string; color: string }[] = [
