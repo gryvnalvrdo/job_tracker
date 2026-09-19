@@ -20,9 +20,9 @@ const STATUS_COLORS: Record<ApplicationStatus, string> = {
 const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { name: string; value: number }[] }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#22263a] border border-[#3d4465] rounded-lg px-3 py-2 text-sm shadow-xl">
-        <p className="font-semibold text-[#e2e8f0]">{payload[0].name}</p>
-        <p className="text-[#8892a4]">{payload[0].value} lamaran</p>
+      <div className="bg-surface-2 border border-border-hover rounded-lg px-3 py-2 text-sm shadow-xl">
+        <p className="font-semibold text-text">{payload[0].name}</p>
+        <p className="text-text-muted">{payload[0].value} lamaran</p>
       </div>
     );
   }
@@ -32,7 +32,7 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { name
 export function StatusChart({ data }: StatusChartProps) {
   if (data.length === 0 || data.every((d) => d.count === 0)) {
     return (
-      <div className="flex items-center justify-center h-40 text-[#8892a4] text-sm">
+      <div className="flex items-center justify-center h-40 text-text-muted text-sm">
         Belum ada data
       </div>
     );
@@ -77,9 +77,9 @@ export function StatusChart({ data }: StatusChartProps) {
                 className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: STATUS_COLORS[entry.status] }}
               />
-              <span className="text-sm text-[#c4cad8]">{entry.name}</span>
+              <span className="text-sm text-text">{entry.name}</span>
             </div>
-            <span className="text-sm font-semibold text-[#e2e8f0]">{entry.value}</span>
+            <span className="text-sm font-semibold text-text">{entry.value}</span>
           </div>
         ))}
       </div>

@@ -8,7 +8,7 @@ export function Skeleton({ className }: { className?: string }) {
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-xl border border-[#2e3348] bg-[#1a1d27] p-5 space-y-3">
+    <div className="rounded-xl border border-border bg-surface p-5 space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton className="h-4 w-32" />
         <Skeleton className="h-6 w-20 rounded-full" />
@@ -34,7 +34,7 @@ export function SkeletonList({ count = 5 }: { count?: number }) {
 
 export function SkeletonStat() {
   return (
-    <div className="rounded-xl border border-[#2e3348] bg-[#1a1d27] p-5 space-y-2">
+    <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
       <Skeleton className="h-3 w-20" />
       <Skeleton className="h-8 w-16" />
       <Skeleton className="h-3 w-28" />

@@ -70,7 +70,7 @@ export function Toaster() {
   const colors = {
     success: "bg-[#10b981]/10 border-[#10b981]/30 text-[#34d399]",
     error: "bg-[#ef4444]/10 border-[#ef4444]/30 text-[#f87171]",
-    info: "bg-[#6366f1]/10 border-[#6366f1]/30 text-[#818cf8]",
+    info: "bg-[#6366f1]/10 border-[#6366f1]/30 text-primary",
     warning: "bg-[#f59e0b]/10 border-[#f59e0b]/30 text-[#fbbf24]",
   };
 

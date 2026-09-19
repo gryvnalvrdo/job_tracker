@@ -35,7 +35,7 @@ export function StatusUpdatePanel({ applicationId, currentStatus }: StatusUpdate
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-medium text-[#8892a4] uppercase tracking-wider mb-2">Status Saat Ini</p>
+        <p className="text-xs font-medium text-text-muted uppercase tracking-wider mb-2">Status Saat Ini</p>
         <div className={cn(
           "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium",
           STATUS_CONFIG[currentStatus].color,
@@ -49,7 +49,7 @@ export function StatusUpdatePanel({ applicationId, currentStatus }: StatusUpdate
 
       {/* Catatan */}
       <div>
-        <label className="text-xs font-medium text-[#8892a4] uppercase tracking-wider block mb-2">
+        <label className="text-xs font-medium text-text-muted uppercase tracking-wider block mb-2">
           Catatan (opsional)
         </label>
         <textarea
@@ -57,13 +57,13 @@ export function StatusUpdatePanel({ applicationId, currentStatus }: StatusUpdate
           onChange={(e) => setNote(e.target.value)}
           placeholder="Tambahkan catatan tentang perubahan status..."
           rows={2}
-          className="w-full rounded-lg border border-[#2e3348] bg-[#22263a] px-3 py-2 text-sm text-[#e2e8f0] placeholder:text-[#4a5568] resize-none focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
+          className="w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-text placeholder:text-text-subtle resize-none focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
         />
       </div>
 
       {/* Update buttons */}
       <div className="space-y-2">
-        <p className="text-xs font-medium text-[#8892a4] uppercase tracking-wider">Update Status</p>
+        <p className="text-xs font-medium text-text-muted uppercase tracking-wider">Update Status</p>
         <div className="grid grid-cols-2 gap-2">
           {nextStatuses.map((status) => {
             const config = STATUS_CONFIG[status];

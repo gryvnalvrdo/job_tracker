@@ -17,7 +17,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={selectId} className="text-sm font-medium text-[#c4cad8]">
+          <label htmlFor={selectId} className="text-sm font-medium text-text">
             {label}
             {props.required && <span className="text-[#ef4444] ml-1">*</span>}
           </label>
@@ -26,12 +26,12 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            "h-10 w-full rounded-lg border bg-[#1a1d27] px-3 text-sm text-[#e2e8f0]",
+            "h-10 w-full rounded-lg border bg-surface px-3 text-sm text-text",
             "transition-all duration-200 appearance-none cursor-pointer",
             "focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1]",
             error
               ? "border-[#ef4444]/60"
-              : "border-[#2e3348] hover:border-[#3d4465]",
+              : "border-border hover:border-border-hover",
             className
           )}
           style={{

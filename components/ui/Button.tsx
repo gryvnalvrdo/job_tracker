@@ -29,13 +29,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         "bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white hover:opacity-90 hover:shadow-lg hover:shadow-[#6366f1]/25 active:scale-[0.98]",
       secondary:
-        "bg-[#1a1d27] text-[#e2e8f0] border border-[#2e3348] hover:bg-[#22263a] hover:border-[#3d4465] active:scale-[0.98]",
+        "bg-surface text-text border border-border hover:bg-surface-2 hover:border-border-hover active:scale-[0.98]",
       ghost:
-        "text-[#8892a4] hover:text-[#e2e8f0] hover:bg-[#22263a] active:scale-[0.98]",
+        "text-text-muted hover:text-text hover:bg-surface-2 active:scale-[0.98]",
       danger:
         "bg-[#ef4444]/10 text-[#f87171] border border-[#ef4444]/30 hover:bg-[#ef4444]/20 active:scale-[0.98]",
       outline:
-        "border border-[#6366f1]/50 text-[#818cf8] hover:bg-[#6366f1]/10 active:scale-[0.98]",
+        "border border-[#6366f1]/50 text-primary hover:bg-[#6366f1]/10 active:scale-[0.98]",
     };
 
     const sizes = {

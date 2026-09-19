@@ -45,7 +45,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f1117] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#8b5cf6]/5 rounded-full blur-3xl" />
       </div>
@@ -60,8 +60,8 @@ export default function RegisterPage() {
             </div>
             <span className="text-2xl font-bold gradient-text">JobTrail</span>
           </div>
-          <h1 className="text-xl font-semibold text-[#e2e8f0]">Mulai tracking lamaran</h1>
-          <p className="text-sm text-[#8892a4] mt-1">Buat akun gratis, tidak perlu kartu kredit</p>
+          <h1 className="text-xl font-semibold text-text">Mulai tracking lamaran</h1>
+          <p className="text-sm text-text-muted mt-1">Buat akun gratis, tidak perlu kartu kredit</p>
         </div>
 
         <div className="glass rounded-2xl p-6 space-y-4">
@@ -119,9 +119,9 @@ export default function RegisterPage() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-[#8892a4] mt-4">
+        <p className="text-center text-sm text-text-muted mt-4">
           Sudah punya akun?{" "}
-          <Link href="/login" className="text-[#818cf8] hover:text-[#a78bfa] font-medium transition-colors">
+          <Link href="/login" className="text-primary hover:text-[#a78bfa] font-medium transition-colors">
             Masuk
           </Link>
         </p>

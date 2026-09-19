@@ -9,11 +9,11 @@ export default function DashboardLoading() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3 rounded-xl border border-[#2e3348] bg-[#1a1d27] p-5">
+        <div className="lg:col-span-3 rounded-xl border border-border bg-surface p-5">
           <div className="skeleton h-4 w-32 rounded mb-4" />
           <div className="skeleton h-48 w-full rounded" />
         </div>
-        <div className="lg:col-span-2 rounded-xl border border-[#2e3348] bg-[#1a1d27] p-5">
+        <div className="lg:col-span-2 rounded-xl border border-border bg-surface p-5">
           <div className="skeleton h-4 w-32 rounded mb-4" />
           <div className="skeleton h-48 w-full rounded" />
         </div>

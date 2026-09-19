@@ -74,13 +74,13 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             <div className="flex items-start gap-4">
               {/* Company avatar */}
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6366f1]/20 to-[#8b5cf6]/20 border border-[#6366f1]/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-2xl font-bold text-[#818cf8]">
+                <span className="text-2xl font-bold text-primary">
                   {application.companyName[0].toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <h1 className="text-xl font-bold text-[#e2e8f0] truncate">{application.companyName}</h1>
+                  <h1 className="text-xl font-bold text-text truncate">{application.companyName}</h1>
                   <StatusBadge status={application.status} />
                   {followUp && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/30">
@@ -91,8 +91,8 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
                     </span>
                   )}
                 </div>
-                <p className="text-base text-[#c4cad8] font-medium">{application.position}</p>
-                <p className="text-sm text-[#8892a4] mt-0.5">
+                <p className="text-base text-text font-medium">{application.position}</p>
+                <p className="text-sm text-text-muted mt-0.5">
                   Apply {formatDate(application.appliedDate)} · {daysAgo === 0 ? "Hari ini" : `${daysAgo} hari lalu`}
                 </p>
               </div>
@@ -107,12 +107,12 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             <div className="grid grid-cols-2 gap-4">
               {application.jobUrl && (
                 <div className="col-span-2">
-                  <p className="text-xs text-[#8892a4] mb-1">Job Posting</p>
+                  <p className="text-xs text-text-muted mb-1">Job Posting</p>
                   <a
                     href={application.jobUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-[#818cf8] hover:text-[#a78bfa] transition-colors truncate block"
+                    className="text-sm text-primary hover:text-[#a78bfa] transition-colors truncate block"
                   >
                     {application.jobUrl}
                   </a>
@@ -120,19 +120,19 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
               )}
               {(application.salaryMin || application.salaryMax) && (
                 <div className="col-span-2">
-                  <p className="text-xs text-[#8892a4] mb-1">Gaji</p>
-                  <p className="text-sm text-[#e2e8f0]">
+                  <p className="text-xs text-text-muted mb-1">Gaji</p>
+                  <p className="text-sm text-text">
                     {formatSalary(application.salaryMin)} — {formatSalary(application.salaryMax)}
                   </p>
                 </div>
               )}
               <div>
-                <p className="text-xs text-[#8892a4] mb-1">Dibuat</p>
-                <p className="text-sm text-[#e2e8f0]">{formatDate(application.createdAt)}</p>
+                <p className="text-xs text-text-muted mb-1">Dibuat</p>
+                <p className="text-sm text-text">{formatDate(application.createdAt)}</p>
               </div>
               <div>
-                <p className="text-xs text-[#8892a4] mb-1">Diperbarui</p>
-                <p className="text-sm text-[#e2e8f0]">{formatDate(application.updatedAt)}</p>
+                <p className="text-xs text-text-muted mb-1">Diperbarui</p>
+                <p className="text-sm text-text">{formatDate(application.updatedAt)}</p>
               </div>
             </div>
           </Card>
@@ -143,7 +143,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
               <CardHeader>
                 <CardTitle>Catatan</CardTitle>
               </CardHeader>
-              <p className="text-sm text-[#c4cad8] whitespace-pre-wrap leading-relaxed">
+              <p className="text-sm text-text whitespace-pre-wrap leading-relaxed">
                 {application.notes}
               </p>
             </Card>
@@ -155,7 +155,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
               <CardHeader>
                 <CardTitle>Saved Cover Letter</CardTitle>
               </CardHeader>
-              <div className="text-sm text-[#c4cad8] whitespace-pre-wrap leading-relaxed bg-[#1a1b26] p-4 rounded-lg font-serif">
+              <div className="text-sm text-text whitespace-pre-wrap leading-relaxed bg-[#1a1b26] p-4 rounded-lg font-serif">
                 {application.coverLetter}
               </div>
             </Card>

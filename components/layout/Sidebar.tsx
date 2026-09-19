@@ -30,15 +30,16 @@ const navItems = [
 interface SidebarProps {
   userName?: string | null;
   userEmail?: string | null;
+  dict: Record<string, string>;
 }
 
-export function Sidebar({ userName, userEmail }: SidebarProps) {
+export function Sidebar({ userName, userEmail, dict }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-[#1a1d27] border-r border-[#2e3348]">
+    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-surface border-r border-border">
       {/* Logo */}
-      <div className="p-6 border-b border-[#2e3348]">
+      <div className="p-6 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -60,12 +61,12 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                 isActive
-                  ? "bg-[#6366f1]/10 text-[#818cf8] border border-[#6366f1]/20"
-                  : "text-[#8892a4] hover:text-[#e2e8f0] hover:bg-[#22263a]"
+                  ? "bg-[#6366f1]/10 text-primary border border-[#6366f1]/20"
+                  : "text-text-muted hover:text-text hover:bg-surface-2"
               )}
             >
-              <span className={isActive ? "text-[#6366f1]" : ""}>{item.icon}</span>
-              {item.label}
+              <span className={isActive ? "text-primary" : ""}>{item.icon}</span>
+              {item.label === "Dashboard" ? dict.dashboard : item.label === "Lamaran" ? dict.applications : item.label}
               {isActive && (
                 <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#6366f1]" />
               )}
@@ -75,26 +76,26 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       </nav>
 
       {/* User footer */}
-      <div className="p-4 border-t border-[#2e3348]">
+      <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3 px-2 mb-3">
           <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
             {(userName ?? userEmail ?? "U")[0].toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-[#e2e8f0] truncate">{userName ?? "User"}</p>
-            <p className="text-xs text-[#8892a4] truncate">{userEmail}</p>
+            <p className="text-sm font-medium text-text truncate">{userName ?? "User"}</p>
+            <p className="text-xs text-text-muted truncate">{userEmail}</p>
           </div>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start gap-2 text-[#8892a4]"
+          className="w-full justify-start gap-2 text-text-muted"
           onClick={() => signOut({ callbackUrl: "/login" })}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
           </svg>
-          Sign Out
+          {dict.signOut}
         </Button>
       </div>
     </aside>

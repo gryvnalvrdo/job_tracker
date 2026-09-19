@@ -85,7 +85,7 @@ function LoginForm() {
 
       <div className="flex items-center gap-3">
         <div className="flex-1 h-px bg-white/10"/>
-        <span className="text-xs text-[#8892a4]">or sign in</span>
+        <span className="text-xs text-text-muted">or sign in</span>
         <div className="flex-1 h-px bg-white/10"/>
       </div>
 
@@ -130,7 +130,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f1117] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#6366f1]/5 rounded-full blur-3xl" />
@@ -147,8 +147,8 @@ export default function LoginPage() {
             </div>
             <span className="text-2xl font-bold gradient-text">JobTrail</span>
           </div>
-          <h1 className="text-xl font-semibold text-[#e2e8f0]">Selamat datang kembali</h1>
-          <p className="text-sm text-[#8892a4] mt-1">Masuk untuk melanjutkan tracking lamaran</p>
+          <h1 className="text-xl font-semibold text-text">Selamat datang kembali</h1>
+          <p className="text-sm text-text-muted mt-1">Masuk untuk melanjutkan tracking lamaran</p>
         </div>
 
         {/* Wrap useSearchParams in Suspense as required by Next.js 15 */}
@@ -158,22 +158,22 @@ export default function LoginPage() {
           <LoginForm />
         </Suspense>
 
-        <p className="text-center text-sm text-[#8892a4] mt-4">
+        <p className="text-center text-sm text-text-muted mt-4">
           Belum punya akun?{" "}
-          <Link href="/register" className="text-[#818cf8] hover:text-[#a78bfa] font-medium transition-colors">
+          <Link href="/register" className="text-primary hover:text-[#a78bfa] font-medium transition-colors">
             Daftar sekarang
           </Link>
         </p>
 
         {/* Portfolio attribution */}
         <div className="mt-6 pt-4 border-t border-white/5 text-center">
-          <p className="text-xs text-[#8892a4]/60">
+          <p className="text-xs text-text-muted/60">
             Part of the{" "}
             <a
               href="https://gryven.vercel.app"
               target="_blank"
               rel="noopener"
-              className="text-[#818cf8]/80 hover:text-[#a78bfa] transition-colors"
+              className="text-primary/80 hover:text-[#a78bfa] transition-colors"
             >
               Job Hunting Suite
             </a>

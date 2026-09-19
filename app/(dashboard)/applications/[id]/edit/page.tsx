@@ -30,8 +30,8 @@ export default async function EditApplicationPage({ params }: EditApplicationPag
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-[#e2e8f0]">Edit Lamaran</h1>
-          <p className="text-sm text-[#8892a4]">
+          <h1 className="text-2xl font-bold text-text">Edit Lamaran</h1>
+          <p className="text-sm text-text-muted">
             {application.companyName} — {application.position}
           </p>
         </div>

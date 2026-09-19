@@ -17,9 +17,9 @@ interface MonthlyChartProps {
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#22263a] border border-[#3d4465] rounded-lg px-3 py-2 text-sm shadow-xl">
-        <p className="text-[#8892a4] text-xs mb-1">{label}</p>
-        <p className="font-semibold text-[#e2e8f0]">{payload[0].value} lamaran</p>
+      <div className="bg-surface-2 border border-border-hover rounded-lg px-3 py-2 text-sm shadow-xl">
+        <p className="text-text-muted text-xs mb-1">{label}</p>
+        <p className="font-semibold text-text">{payload[0].value} lamaran</p>
       </div>
     );
   }

@@ -16,7 +16,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={textareaId} className="text-sm font-medium text-[#c4cad8]">
+          <label htmlFor={textareaId} className="text-sm font-medium text-text">
             {label}
             {props.required && <span className="text-[#ef4444] ml-1">*</span>}
           </label>
@@ -26,17 +26,17 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={textareaId}
           rows={4}
           className={cn(
-            "w-full rounded-lg border bg-[#1a1d27] px-3 py-2 text-sm text-[#e2e8f0] placeholder:text-[#4a5568] resize-none",
+            "w-full rounded-lg border bg-surface px-3 py-2 text-sm text-text placeholder:text-text-subtle resize-none",
             "transition-all duration-200",
             "focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1]",
             error
               ? "border-[#ef4444]/60 focus:ring-[#ef4444]/30 focus:border-[#ef4444]"
-              : "border-[#2e3348] hover:border-[#3d4465]",
+              : "border-border hover:border-border-hover",
             className
           )}
           {...props}
         />
-        {hint && !error && <p className="text-xs text-[#8892a4]">{hint}</p>}
+        {hint && !error && <p className="text-xs text-text-muted">{hint}</p>}
         {error && (
           <p className="text-xs text-[#f87171] flex items-center gap-1">
             <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

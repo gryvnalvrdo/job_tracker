@@ -17,7 +17,7 @@ interface StatusTimelineProps {
 export function StatusTimeline({ history }: StatusTimelineProps) {
   if (history.length === 0) {
     return (
-      <p className="text-sm text-[#8892a4] text-center py-4">
+      <p className="text-sm text-text-muted text-center py-4">
         Belum ada riwayat perubahan status
       </p>
     );
@@ -52,11 +52,11 @@ export function StatusTimeline({ history }: StatusTimelineProps) {
                 <span className={cn("text-sm font-semibold", config.color)}>
                   {config.label}
                 </span>
-                <span className="text-xs text-[#8892a4]">·</span>
-                <span className="text-xs text-[#8892a4]">{formatDate(item.changedAt)}</span>
+                <span className="text-xs text-text-muted">·</span>
+                <span className="text-xs text-text-muted">{formatDate(item.changedAt)}</span>
               </div>
               {item.note && (
-                <p className="mt-1 text-sm text-[#c4cad8] bg-[#22263a] rounded-lg px-3 py-2 border border-[#2e3348]">
+                <p className="mt-1 text-sm text-text bg-surface-2 rounded-lg px-3 py-2 border border-border">
                   {item.note}
                 </p>
               )}

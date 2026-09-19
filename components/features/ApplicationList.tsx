@@ -60,11 +60,11 @@ export function ApplicationList({ applications }: ApplicationListProps) {
         <div className="flex items-center gap-3 pl-2 cursor-pointer select-none" onClick={toggleSelectAll}>
           <input
             type="checkbox"
-            className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-[#6366f1] focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
+            className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-primary focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
             checked={selectedIds.length === applications.length && applications.length > 0}
             readOnly
           />
-          <span className="text-sm font-medium text-[#e2e8f0]">
+          <span className="text-sm font-medium text-text">
             {selectedIds.length > 0 ? `${selectedIds.length} dipilih` : "Pilih Semua"}
           </span>
         </div>
@@ -99,7 +99,7 @@ export function ApplicationList({ applications }: ApplicationListProps) {
                 >
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-[#6366f1] focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
+                    className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-primary focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
                     checked={isSelected}
                     readOnly
                   />
@@ -108,7 +108,7 @@ export function ApplicationList({ applications }: ApplicationListProps) {
                 <Link href={`/applications/${app.id}`} className="flex-1 flex items-center gap-4 min-w-0 group py-2">
                   {/* Avatar */}
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6366f1]/20 to-[#8b5cf6]/20 border border-[#6366f1]/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-base font-bold text-[#818cf8]">
+                    <span className="text-base font-bold text-primary">
                       {app.companyName[0].toUpperCase()}
                     </span>
                   </div>
@@ -116,7 +116,7 @@ export function ApplicationList({ applications }: ApplicationListProps) {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-[#e2e8f0] group-hover:text-white transition-colors truncate">
+                      <span className="font-semibold text-text group-hover:text-white transition-colors truncate">
                         {app.companyName}
                       </span>
                       <StatusBadge status={app.status} size="sm" />
@@ -124,15 +124,15 @@ export function ApplicationList({ applications }: ApplicationListProps) {
                         <span className="text-xs text-[#fbbf24]">• Perlu follow-up</span>
                       )}
                     </div>
-                    <p className="text-sm text-[#8892a4] truncate">{app.position}</p>
+                    <p className="text-sm text-text-muted truncate">{app.position}</p>
                   </div>
 
                   {/* Date */}
                   <div className="text-right flex-shrink-0 hidden sm:block">
-                    <p className="text-xs text-[#8892a4]">{formatDate(app.appliedDate)}</p>
+                    <p className="text-xs text-text-muted">{formatDate(app.appliedDate)}</p>
                   </div>
 
-                  <svg className="w-4 h-4 text-[#4a5568] group-hover:text-[#8892a4] transition-colors flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-text-subtle group-hover:text-text-muted transition-colors flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>

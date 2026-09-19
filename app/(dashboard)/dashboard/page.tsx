@@ -8,6 +8,8 @@ import { StatusChart } from "@/components/features/charts/StatusChart";
 import { formatDate, needsFollowUp } from "@/lib/utils";
 import { STATUS_CONFIG } from "@/lib/constants";
 import { ApplicationStatus } from "@/generated/prisma/client";
+import { cookies } from "next/headers";
+import { getDictionary, Language } from "@/lib/dictionary";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -35,6 +37,10 @@ const STAT_ICONS: Record<string, React.ReactNode> = {
 };
 
 export default async function DashboardPage() {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("lang")?.value as Language) || "en";
+  const dict = getDictionary(lang).dashboard;
+
   const [stats, { applications: recentApps }] = await Promise.all([
     getDashboardStats(),
     getApplications({ page: 1 }),
@@ -55,40 +61,55 @@ export default async function DashboardPage() {
   const statCards = [
     {
       key: "total",
-      label: "Total Lamaran",
+      label: dict.stats.total,
       value: stats.total,
-      sub: "semua waktu",
-      color: "text-[#818cf8]",
-      bg: "bg-[#6366f1]/10",
+      sub: dict.stats.totalSub,
+      color: "text-primary",
+      bg: "bg-primary/10",
+      icon: STAT_ICONS.total,
     },
     {
       key: "interview",
-      label: "Interview",
+      label: dict.stats.interview,
       value: interviewCount,
-      sub: "sedang berjalan",
+      sub: dict.stats.interviewSub,
       color: "text-[#fbbf24]",
       bg: "bg-[#f59e0b]/10",
+      icon: STAT_ICONS.interview,
     },
     {
       key: "offer",
-      label: "Offer",
+      label: dict.stats.offer,
       value: offerCount,
-      sub: "diterima",
+      sub: dict.stats.offerSub,
       color: "text-[#34d399]",
       bg: "bg-[#10b981]/10",
+      icon: STAT_ICONS.offer,
     },
     {
-      key: "rate",
-      label: "Response Rate",
-      value: `${stats.responseRate}%`,
-      sub: "lanjut ke interview",
+      key: "rejected",
+      label: dict.stats.rejected,
+      value: stats.statusData.find((s) => s.status === "REJECTED")?.count ?? 0,
+      sub: dict.stats.rejectedSub,
       color: "text-[#f87171]",
       bg: "bg-[#ef4444]/10",
+      icon: STAT_ICONS.rate,
     },
   ];
 
   return (
     <div className="space-y-6">
+      <div className="mb-8 flex items-end justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl font-bold text-text mb-2 tracking-tight">
+            {dict.title}
+          </h1>
+          <p className="text-text-muted">
+            {dict.subtitle}
+          </p>
+        </div>
+      </div>
+
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat) => (
@@ -97,53 +118,55 @@ export default async function DashboardPage() {
             <div className={`mb-3 w-9 h-9 rounded-lg ${stat.bg} flex items-center justify-center ${stat.color}`}>
               {STAT_ICONS[stat.key]}
             </div>
-            <p className="text-2xl font-bold text-[#e2e8f0]">{stat.value}</p>
-            <p className="text-sm font-medium text-[#c4cad8] mt-0.5">{stat.label}</p>
-            <p className="text-xs text-[#8892a4]">{stat.sub}</p>
+            <p className="text-2xl font-bold text-text">{stat.value}</p>
+            <p className="text-sm font-medium text-text mt-0.5">{stat.label}</p>
+            <p className="text-xs text-text-muted">{stat.sub}</p>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Monthly chart */}
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Lamaran per Bulan</CardTitle>
-            <span className="text-xs text-[#8892a4]">6 bulan terakhir</span>
-          </CardHeader>
-          <MonthlyChart data={stats.monthlyData} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-5 flex flex-col h-full bg-surface">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-text">{dict.charts.funnelTitle}</h3>
+            <span className="text-xs text-text-muted">{dict.charts.funnelSub}</span>
+          </div>
+          <div className="flex-1 min-h-[200px]">
+            <StatusChart data={stats.statusData} />
+          </div>
         </Card>
-
-        {/* Status chart */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Distribusi Status</CardTitle>
-          </CardHeader>
-          <StatusChart data={stats.statusData} />
+        <Card className="p-5 flex flex-col h-full bg-surface">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-text">{dict.charts.monthlyTitle}</h3>
+            <span className="text-xs text-text-muted">{dict.charts.monthlySub}</span>
+          </div>
+          <div className="flex-1 min-h-[200px]">
+            <MonthlyChart data={stats.monthlyData} />
+          </div>
         </Card>
       </div>
 
       {/* Follow-up alerts */}
       {followUpApps.length > 0 && (
         <Card className="border-[#f59e0b]/30 bg-[#f59e0b]/5">
-          <CardHeader>
+          <div className="p-4 border-b border-border/50 bg-[#f59e0b]/10 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4 text-[#fbbf24]" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
               </svg>
-              <CardTitle>Perlu Follow-up ({followUpApps.length})</CardTitle>
+              <h3 className="text-sm font-semibold text-[#fbbf24]">{dict.followUp.title} ({followUpApps.length})</h3>
             </div>
-            <Link href="/applications" className="text-xs text-[#818cf8] hover:underline">
-              Lihat semua
+            <Link href="/applications" className="text-xs text-primary hover:underline">
+              {dict.followUp.viewAll}
             </Link>
-          </CardHeader>
-          <div className="space-y-2">
+          </div>
+          <div className="p-4 space-y-2">
             {followUpApps.slice(0, 5).map((app) => (
               <Link key={app.id} href={`/applications/${app.id}`}>
                 <div className="flex items-center justify-between gap-3 py-2 hover:opacity-80 transition-opacity">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#e2e8f0] truncate">{app.companyName}</p>
-                    <p className="text-xs text-[#8892a4] truncate">{app.position}</p>
+                    <p className="text-sm font-medium text-text truncate">{app.companyName}</p>
+                    <p className="text-xs text-text-muted truncate">{app.position}</p>
                   </div>
                   <StatusBadge status={app.status} size="sm" />
                 </div>
@@ -154,40 +177,13 @@ export default async function DashboardPage() {
       )}
 
       {/* Recent applications */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lamaran Terbaru</CardTitle>
-          <Link href="/applications" className="text-xs text-[#818cf8] hover:underline">
-            Lihat semua
+      <Card className="bg-surface h-full flex flex-col">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/50">
+          <CardTitle className="text-base">{dict.recent.title}</CardTitle>
+          <Link href="/applications" className="text-xs text-primary hover:underline">
+            {dict.recent.viewAll}
           </Link>
         </CardHeader>
-        {recentApps.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-sm text-[#8892a4] mb-3">Belum ada lamaran</p>
-            <Link href="/applications/new" className="text-sm text-[#818cf8] hover:underline">
-              Tambah lamaran pertama →
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {recentApps.slice(0, 5).map((app) => (
-              <Link key={app.id} href={`/applications/${app.id}`} className="block">
-                <div className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-[#22263a] transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6366f1]/20 to-[#8b5cf6]/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-[#818cf8]">
-                      {app.companyName[0].toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#e2e8f0] truncate">{app.companyName}</p>
-                    <p className="text-xs text-[#8892a4] truncate">{app.position}</p>
-                  </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs text-[#8892a4] hidden sm:block">
-                      {formatDate(app.appliedDate)}
-                    </span>
-                    <StatusBadge status={app.status} size="sm" />
-                  </div>
                 </div>
               </Link>
             ))}
