@@ -37,7 +37,7 @@ export function Sidebar({ userName, userEmail, dict }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-surface border-r border-border">
+    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-surface border-r border-border">
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-2.5">
