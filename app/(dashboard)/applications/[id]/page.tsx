@@ -47,7 +47,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
         <div className="flex gap-2 flex-wrap">
           {/* CoverCraft integration — part of Job Hunting Suite */}
           <a
-            href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL || "http://localhost:3001"}/covercraft?job=${encodeURIComponent(application.position)}&company=${encodeURIComponent(application.companyName)}`}
+            href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL || "https://portofolio-seven-lac-56.vercel.app"}/covercraft?job=${encodeURIComponent(application.position)}&company=${encodeURIComponent(application.companyName)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
