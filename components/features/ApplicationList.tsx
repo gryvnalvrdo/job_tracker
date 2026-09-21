@@ -6,6 +6,7 @@ import { Application } from "@/generated/prisma/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/features/StatusBadge";
+import { SwipeableItem } from "@/components/features/SwipeableItem";
 import { formatDate, needsFollowUp } from "@/lib/utils";
 import { deleteApplications } from "@/lib/actions/applications";
 
@@ -85,11 +86,21 @@ export function ApplicationList({ applications }: ApplicationListProps) {
         )}
       </div>
 
+      {/* Swipe hint — mobile only */}
+      <p className="text-xs text-text-subtle text-center py-1 sm:hidden opacity-60">
+        ← Geser untuk Rejected &nbsp;·&nbsp; Geser untuk Maju →
+      </p>
+
       {/* List */}
       <div className="space-y-3">
         {applications.map((app) => {
           const isSelected = selectedIds.includes(app.id);
           return (
+            <SwipeableItem
+              key={app.id}
+              applicationId={app.id}
+              currentStatus={app.status}
+            >
             <Card key={app.id} hover className={`transition-all ${isSelected ? "border-[#6366f1]/50 bg-[#6366f1]/5" : ""}`}>
               <div className="flex items-center gap-4">
                 {/* Checkbox */}
@@ -138,6 +149,7 @@ export function ApplicationList({ applications }: ApplicationListProps) {
                 </Link>
               </div>
             </Card>
+            </SwipeableItem>
           );
         })}
       </div>
