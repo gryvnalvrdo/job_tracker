@@ -7,6 +7,7 @@ import { ApplicationData } from "./ApplicationList";
 
 interface KanbanBoardProps {
   applications: ApplicationData[];
+  readOnly?: boolean;
 }
 
 const KANBAN_COLUMNS: { id: ApplicationStatus; label: string; color: string }[] = [
@@ -16,7 +17,7 @@ const KANBAN_COLUMNS: { id: ApplicationStatus; label: string; color: string }[] 
   { id: "REJECTED", label: "Rejected", color: "bg-red-500/10 text-red-500 border-red-500/20" },
 ];
 
-export function KanbanBoard({ applications }: KanbanBoardProps) {
+export function KanbanBoard({ applications, readOnly = false }: KanbanBoardProps) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
       {KANBAN_COLUMNS.map((col) => {
@@ -39,9 +40,9 @@ export function KanbanBoard({ applications }: KanbanBoardProps) {
                   Empty
                 </div>
               ) : (
-                columnApps.map((app) => (
-                  <Link href={`/applications/${app.id}`} key={app.id} className="block">
-                    <div className="p-3 bg-surface border border-border rounded-lg shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+                columnApps.map((app) => {
+                  const cardContent = (
+                    <div className={`p-3 bg-surface border border-border rounded-lg shadow-sm transition-all ${readOnly ? 'cursor-default' : 'hover:border-primary/50 hover:shadow-md cursor-pointer'}`}>
                       <h4 className="text-sm font-semibold text-text truncate mb-0.5">{app.companyName}</h4>
                       <p className="text-xs text-text-muted truncate mb-2">{app.position}</p>
                       
@@ -50,8 +51,18 @@ export function KanbanBoard({ applications }: KanbanBoardProps) {
                         <span>{formatDate(app.appliedDate)}</span>
                       </div>
                     </div>
-                  </Link>
-                ))
+                  );
+                  
+                  return readOnly ? (
+                    <div key={app.id} className="block">
+                      {cardContent}
+                    </div>
+                  ) : (
+                    <Link href={`/applications/${app.id}`} key={app.id} className="block">
+                      {cardContent}
+                    </Link>
+                  );
+                })
               )}
             </div>
           </div>

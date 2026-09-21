@@ -12,6 +12,7 @@ interface SwipeableItemProps {
   applicationId: string;
   currentStatus: ApplicationStatus;
   className?: string;
+  readOnly?: boolean;
 }
 
 const SWIPE_THRESHOLD = 72; // px to commit a swipe action
@@ -34,6 +35,7 @@ export function SwipeableItem({
   applicationId,
   currentStatus,
   className = "",
+  readOnly = false,
 }: SwipeableItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef(0);
@@ -45,12 +47,14 @@ export function SwipeableItem({
   const canReject = REJECT_ELIGIBLE.includes(currentStatus);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (readOnly) return;
     startXRef.current = e.touches[0].clientX;
     setOffset(0);
-  }, []);
+  }, [readOnly]);
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
+      if (readOnly) return;
       const dx = e.touches[0].clientX - startXRef.current;
       if (dx > 0 && !advanceStatus) return; // can't advance terminal
       if (dx < 0 && !canReject) return;      // can't reject terminal
@@ -58,11 +62,11 @@ export function SwipeableItem({
       const clamped = Math.max(-140, Math.min(140, dx));
       setOffset(clamped);
     },
-    [advanceStatus, canReject]
+    [advanceStatus, canReject, readOnly]
   );
 
   const handleTouchEnd = useCallback(async () => {
-    if (isActing) return;
+    if (isActing || readOnly) return;
 
     if (offset >= SWIPE_THRESHOLD && advanceStatus) {
       setIsActing(true);
@@ -95,7 +99,7 @@ export function SwipeableItem({
     } else {
       setOffset(0);
     }
-  }, [offset, advanceStatus, canReject, applicationId, isActing, router]);
+  }, [offset, advanceStatus, canReject, applicationId, isActing, router, readOnly]);
 
   // Opacity of action hints
   const rightOpacity = Math.min(1, offset / SWIPE_THRESHOLD);

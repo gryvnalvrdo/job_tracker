@@ -16,9 +16,10 @@ export type ApplicationData = NonNullable<Awaited<ReturnType<typeof getApplicati
 
 interface ApplicationListProps {
   applications: ApplicationData[];
+  readOnly?: boolean;
 }
 
-export function ApplicationList({ applications }: ApplicationListProps) {
+export function ApplicationList({ applications, readOnly = false }: ApplicationListProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -57,7 +58,8 @@ export function ApplicationList({ applications }: ApplicationListProps) {
   return (
     <div className="space-y-4">
       {/* Action Bar */}
-      <div className="flex items-center justify-between bg-[#1e2433] p-3 rounded-xl border border-[#2e364f]">
+      {!readOnly && (
+        <div className="flex items-center justify-between bg-[#1e2433] p-3 rounded-xl border border-[#2e364f]">
         <div className="flex items-center gap-3 pl-2 cursor-pointer select-none" onClick={toggleSelectAll}>
           <input
             type="checkbox"
@@ -85,6 +87,7 @@ export function ApplicationList({ applications }: ApplicationListProps) {
           </Button>
         )}
       </div>
+      )}
 
       {/* Swipe hint — mobile only */}
       <p className="text-xs text-text-subtle text-center py-1 sm:hidden opacity-60">
@@ -100,23 +103,30 @@ export function ApplicationList({ applications }: ApplicationListProps) {
               key={app.id}
               applicationId={app.id}
               currentStatus={app.status}
+              readOnly={readOnly}
             >
-            <Card key={app.id} hover className={`transition-all ${isSelected ? "border-[#6366f1]/50 bg-[#6366f1]/5" : ""}`}>
+            <Card key={app.id} hover={!readOnly} className={`transition-all ${isSelected ? "border-[#6366f1]/50 bg-[#6366f1]/5" : ""}`}>
               <div className="flex items-center gap-4">
                 {/* Checkbox */}
-                <div 
-                  className="pl-1 flex items-center justify-center cursor-pointer self-stretch py-2"
-                  onClick={() => toggleSelect(app.id)}
-                >
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-primary focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
-                    checked={isSelected}
-                    readOnly
-                  />
-                </div>
+                {!readOnly && (
+                  <div 
+                    className="pl-1 flex items-center justify-center cursor-pointer self-stretch py-2"
+                    onClick={() => toggleSelect(app.id)}
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded border-[#4a5568] bg-[#0f1219] text-primary focus:ring-[#6366f1]/50 cursor-pointer pointer-events-none"
+                      checked={isSelected}
+                      readOnly
+                    />
+                  </div>
+                )}
 
-                <Link href={`/applications/${app.id}`} className="flex-1 flex items-center gap-4 min-w-0 group py-2">
+                <Link 
+                  href={readOnly ? "#" : `/applications/${app.id}`} 
+                  className={`flex-1 flex items-center gap-4 min-w-0 group py-2 ${readOnly ? 'cursor-default pointer-events-none' : ''}`}
+                  onClick={(e) => { if (readOnly) e.preventDefault(); }}
+                >
                   {/* Avatar */}
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6366f1]/20 to-[#8b5cf6]/20 border border-[#6366f1]/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-base font-bold text-primary">
