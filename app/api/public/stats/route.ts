@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const demoEmail = "demo@jobtrail.app";
+    const demoEmail = "gryvnalvrdo@gmail.com";
     const user = await prisma.user.findUnique({
       where: { email: demoEmail }
     });

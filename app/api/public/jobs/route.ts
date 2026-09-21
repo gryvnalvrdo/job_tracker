@@ -5,7 +5,17 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    const ownerEmail = "gryvnalvrdo@gmail.com";
+    const user = await prisma.user.findUnique({
+      where: { email: ownerEmail },
+    });
+
+    if (!user) {
+      return NextResponse.json({ success: true, jobs: [] });
+    }
+
     const jobs = await prisma.application.findMany({
+      where: { userId: user.id },
       take: 8,
       orderBy: {
         appliedDate: "desc",
