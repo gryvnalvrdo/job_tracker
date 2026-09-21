@@ -26,20 +26,18 @@ export async function POST(req: Request) {
       position = parts.slice(1).join(":").trim();
     }
 
-    // 3. Find Demo User
-    const demoEmail = "demo@jobtrail.app";
+    // 3. Find the owner user (n8n saves jobs to the owner's account)
+    // Set AUTOAPPLY_USER_EMAIL in env to control which account receives n8n jobs
+    const ownerEmail = process.env.AUTOAPPLY_USER_EMAIL || "gryvnalvrdo@gmail.com";
     let user = await prisma.user.findUnique({
-      where: { email: demoEmail },
+      where: { email: ownerEmail },
     });
 
-    // Fallback if demo user doesn't exist, try to get the first user
     if (!user) {
-        const firstUser = await prisma.user.findFirst();
-        if (firstUser) {
-            user = firstUser;
-        } else {
-             return NextResponse.json({ error: "No users found in database to assign application to" }, { status: 500 });
-        }
+      return NextResponse.json(
+        { error: `Owner user not found: ${ownerEmail}. Set AUTOAPPLY_USER_EMAIL env var.` },
+        { status: 500 }
+      );
     }
 
     // 3.5 Check for Duplicates in BOTH Application and ProcessedJob
