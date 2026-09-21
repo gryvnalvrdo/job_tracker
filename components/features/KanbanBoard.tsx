@@ -25,16 +25,16 @@ export function KanbanBoard({ applications, readOnly = false }: KanbanBoardProps
         
         return (
           <div key={col.id} className="min-w-[280px] w-[300px] flex-shrink-0 snap-start flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${col.color}`}>
+            <div className="flex items-center justify-between mb-1">
+              <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${col.color} backdrop-blur-sm shadow-sm`}>
                 {col.label}
               </div>
-              <span className="text-xs font-medium text-text-muted bg-surface-2 px-2 py-1 rounded-md">
+              <span className="text-xs font-bold text-text bg-surface-2 px-2.5 py-1 rounded-md shadow-inner border border-border/40">
                 {columnApps.length}
               </span>
             </div>
             
-            <div className="flex flex-col gap-3 h-full min-h-[150px] p-2 rounded-xl bg-surface/50 border border-border/50">
+            <div className="flex flex-col gap-3 h-full min-h-[200px] p-2.5 rounded-2xl bg-surface/30 backdrop-blur-sm border border-white/5 shadow-inner">
               {columnApps.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center text-sm text-text-muted/50 border-2 border-dashed border-border/50 rounded-lg p-4">
                   Empty
@@ -42,13 +42,16 @@ export function KanbanBoard({ applications, readOnly = false }: KanbanBoardProps
               ) : (
                 columnApps.map((app) => {
                   const cardContent = (
-                    <div className={`p-3 bg-surface border border-border rounded-lg shadow-sm transition-all ${readOnly ? 'cursor-default' : 'hover:border-primary/50 hover:shadow-md cursor-pointer'}`}>
-                      <h4 className="text-sm font-semibold text-text truncate mb-0.5">{app.companyName}</h4>
-                      <p className="text-xs text-text-muted truncate mb-2">{app.position}</p>
+                    <div className={`p-4 bg-surface/60 backdrop-blur-md border border-white/10 rounded-xl shadow-lg transition-all duration-300 ${readOnly ? 'cursor-default' : 'hover:-translate-y-1 hover:rotate-1 hover:scale-[1.02] hover:border-primary/50 hover:shadow-primary/20 hover:shadow-xl cursor-pointer group'}`}>
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="text-sm font-bold text-text truncate group-hover:text-primary transition-colors">{app.companyName}</h4>
+                        <div className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></div>
+                      </div>
+                      <p className="text-xs text-text-muted font-medium truncate mb-3">{app.position}</p>
                       
-                      <div className="flex items-center justify-between text-[10px] text-text-muted mt-3 pt-2 border-t border-border/50">
-                        <span className="truncate max-w-[120px]">Remote</span>
-                        <span>{formatDate(app.appliedDate)}</span>
+                      <div className="flex items-center justify-between text-[10px] text-text-muted mt-3 pt-3 border-t border-white/5">
+                        <span className="truncate max-w-[120px] bg-white/5 px-2 py-0.5 rounded text-white/70">Remote</span>
+                        <span className="font-mono text-white/60">{formatDate(app.appliedDate)}</span>
                       </div>
                     </div>
                   );
