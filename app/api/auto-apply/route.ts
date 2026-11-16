@@ -1,88 +1,121 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // Assuming this is the correct path for Prisma client
+import crypto from "node:crypto";
+import { prisma } from "@/lib/prisma";
+
+function safeSecretEqual(provided: string, expected: string): boolean {
+  const providedBuf = Buffer.from(provided);
+  const expectedBuf = Buffer.from(expected);
+  if (providedBuf.length !== expectedBuf.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(providedBuf, expectedBuf);
+}
+
+function sanitizeHttpUrl(raw: unknown): string | null {
+  if (typeof raw !== "string" || !raw.trim()) return null;
+  try {
+    const parsed = new URL(raw.trim());
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return parsed.toString().slice(0, 2048);
+  } catch {
+    return null;
+  }
+}
 
 export async function POST(req: Request) {
   try {
-    // 1. Verify Secret Key
-    const secret = req.headers.get("x-autoapply-secret");
-    const expectedSecret = process.env.AUTOAPPLY_SECRET || "my-secret-key";
+    const expectedSecret = process.env.AUTOAPPLY_SECRET;
+    if (!expectedSecret) {
+      return NextResponse.json(
+        { error: "Webhook ingestion secret is not configured" },
+        { status: 503 }
+      );
+    }
 
-    if (secret !== expectedSecret) {
+    const secret = req.headers.get("x-autoapply-secret") || "";
+    if (!secret || !safeSecretEqual(secret, expectedSecret)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2. Parse Body
-    const body = await req.json();
-    let { companyName, position, jobUrl, source } = body;
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+    }
+
+    let companyName = typeof body.companyName === "string" ? body.companyName.trim().slice(0, 160) : "";
+    let position = typeof body.position === "string" ? body.position.trim().slice(0, 200) : "";
+    const jobUrl = sanitizeHttpUrl(body.jobUrl);
+    const source = typeof body.source === "string" ? body.source.trim().slice(0, 100) : "";
 
     if (!companyName || !position) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // FIX for n8n sending "Company" and combined title from WWR
+    // Normalize WWR combined title format
     if (companyName === "Company" && position.includes(":")) {
       const parts = position.split(":");
-      companyName = parts[0].trim();
-      position = parts.slice(1).join(":").trim();
+      companyName = parts[0].trim().slice(0, 160);
+      position = parts.slice(1).join(":").trim().slice(0, 200);
     }
 
-    // 3. Find the owner user (n8n saves jobs to the owner's account)
-    // Set AUTOAPPLY_USER_EMAIL in env to control which account receives n8n jobs
     const ownerEmail = process.env.AUTOAPPLY_USER_EMAIL || "gryvnalvrdo@gmail.com";
-    let user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: ownerEmail },
     });
 
     if (!user) {
       return NextResponse.json(
-        { error: `Owner user not found: ${ownerEmail}. Set AUTOAPPLY_USER_EMAIL env var.` },
+        { error: "Configured owner account was not found." },
         { status: 500 }
       );
     }
 
-    // 3.5 Check for Duplicates in BOTH Application and ProcessedJob
     const duplicateCondition = {
       OR: [
-        { jobUrl: jobUrl ? jobUrl : undefined },
+        ...(jobUrl ? [{ jobUrl }] : []),
         {
           AND: [
             { companyName: { equals: companyName, mode: "insensitive" as const } },
-            { position: { equals: position, mode: "insensitive" as const } }
-          ]
-        }
-      ]
+            { position: { equals: position, mode: "insensitive" as const } },
+          ],
+        },
+      ],
     };
 
     const [existingApp, existingProcessed] = await Promise.all([
       prisma.application.findFirst({
         where: {
           userId: user.id,
-          ...duplicateCondition
-        }
+          ...duplicateCondition,
+        },
       }),
       prisma.processedJob.findFirst({
-        where: duplicateCondition
-      })
+        where: duplicateCondition,
+      }),
     ]);
 
     if (existingApp || existingProcessed) {
-      // If it exists in Application but NOT in ProcessedJob (old data), let's backfill it so it stays there if deleted
       if (existingApp && !existingProcessed) {
-        await prisma.processedJob.create({
-          data: {
-            companyName: existingApp.companyName,
-            position: existingApp.position,
-            jobUrl: existingApp.jobUrl,
-            source: source || null,
-          }
-        }).catch(() => {}); // ignore duplicate key errors if any
+        await prisma.processedJob
+          .create({
+            data: {
+              companyName: existingApp.companyName,
+              position: existingApp.position,
+              jobUrl: existingApp.jobUrl,
+              source: source || null,
+            },
+          })
+          .catch(() => {});
       }
 
-      // Return 200 OK so n8n doesn't error, but include a message that it was skipped
-      return NextResponse.json({ success: true, skipped: true, message: "Duplicate job detected" }, { status: 200 });
+      return NextResponse.json(
+        { success: true, skipped: true, message: "Duplicate job detected" },
+        { status: 200 }
+      );
     }
 
-    // 4. Create Application and ProcessedJob history
     const [application] = await prisma.$transaction([
       prisma.application.create({
         data: {
@@ -94,10 +127,8 @@ export async function POST(req: Request) {
           status: "SAVED",
           appliedDate: new Date(),
           statusHistory: {
-            create: [
-              { status: "SAVED" }
-            ]
-          }
+            create: [{ status: "SAVED" }],
+          },
         },
       }),
       prisma.processedJob.create({
@@ -106,8 +137,8 @@ export async function POST(req: Request) {
           position,
           jobUrl,
           source: source || null,
-        }
-      })
+        },
+      }),
     ]);
 
     return NextResponse.json({ success: true, application }, { status: 201 });

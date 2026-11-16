@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const ownerEmail = "gryvnalvrdo@gmail.com";
+    const ownerEmail = process.env.AUTOAPPLY_USER_EMAIL || "gryvnalvrdo@gmail.com";
     const user = await prisma.user.findUnique({
       where: { email: ownerEmail },
     });
@@ -30,21 +30,14 @@ export async function GET() {
       },
     });
 
-    // To prevent full URL leakage if user prefers privacy, we can just return a boolean or short domain,
-    // but the user agreed to show the flexing. Let's return the URL as is.
-
     const response = NextResponse.json({ success: true, jobs });
-
-    // Enable CORS for all domains so the portfolio can fetch it
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+    // Serve traffic spikes from Edge CDN for 30s and revalidate in background
+    response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=60");
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Public API Error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch latest jobs" },
@@ -57,9 +50,6 @@ export async function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
   return response;
 }
