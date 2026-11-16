@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: ApplicationDetailPageProps): 
   const { id } = await params;
   const app = await getApplicationById(id);
   if (!app) return { title: "Lamaran tidak ditemukan" };
-  return { title: `${app.companyName} — ${app.position}` };
+  return { title: `${app.companyName} | ${app.position}` };
 }
 
 export default async function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
@@ -52,7 +52,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             rel="noopener noreferrer"
           >
             <Button variant="secondary" size="sm" className="border-[#7c3aed]/40 text-[#a78bfa] hover:bg-[#7c3aed]/10">
-              ✨ Generate Cover Letter
+              Generate Cover Letter
             </Button>
           </a>
           <Link href={`/applications/${id}/edit`}>
@@ -93,7 +93,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
                 </div>
                 <p className="text-base text-text font-medium">{application.position}</p>
                 <p className="text-sm text-text-muted mt-0.5">
-                  Apply {formatDate(application.appliedDate)} · {daysAgo === 0 ? "Hari ini" : `${daysAgo} hari lalu`}
+                  Apply {formatDate(application.appliedDate)} ({daysAgo === 0 ? "Hari ini" : `${daysAgo} hari lalu`})
                 </p>
               </div>
             </div>

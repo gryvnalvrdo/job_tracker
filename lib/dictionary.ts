@@ -50,7 +50,7 @@ export const dictionary = {
       emptySub: "You haven't added any applications that match the criteria.",
       edit: "Edit",
       delete: "Delete",
-      generateCoverLetter: "✨ Generate Cover Letter",
+      generateCoverLetter: "Generate Cover Letter",
       detail: {
         title: "Application Detail",
         back: "All Applications",
@@ -122,7 +122,7 @@ export const dictionary = {
       emptySub: "Belum ada lamaran yang cocok dengan kriteria pencarian.",
       edit: "Edit",
       delete: "Hapus",
-      generateCoverLetter: "✨ Buat Cover Letter",
+      generateCoverLetter: "Buat Cover Letter",
       detail: {
         title: "Detail Lamaran",
         back: "Semua Lamaran",
